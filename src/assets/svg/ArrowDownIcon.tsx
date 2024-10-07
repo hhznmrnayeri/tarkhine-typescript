@@ -1,4 +1,6 @@
-export default function ArrowDownIcon(size: string) {
+import { Icon } from "../../types/Icons.types";
+
+export default function ArrowDownIcon({ size }: Icon): React.ReactNode {
   return (
     <svg
       className={`${size}`}
