@@ -1,3 +1,3 @@
 export type Icon = {
-  size: string;
+  size?: string;
 };
