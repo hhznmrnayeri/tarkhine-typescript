@@ -7,6 +7,7 @@ import Topic from "./Topic";
 import { TopicType } from "../../types/Topic.types";
 import { BranchType } from "../../types/Branch.types";
 import Intro from "./Intro";
+import Branch from "./Branch";
 export default function Index() {
   const [topicArray, setTopicArray] = useState<TopicType[]>([]);
   const [branchArray, setBranchArray] = useState<BranchType[]>([]);
@@ -31,6 +32,7 @@ export default function Index() {
       <SearchBox />
       <Topic topicArray={topicArray} branchArray={branchArray} />
       <Intro />
+      <Branch branchArray={branchArray} />
     </>
   );
 }
