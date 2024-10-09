@@ -6,6 +6,7 @@ import SearchBox from "../../components/SearchBox";
 import Topic from "./Topic";
 import { TopicType } from "../../types/Topic.types";
 import { BranchType } from "../../types/Branch.types";
+import Intro from "./Intro";
 export default function Index() {
   const [topicArray, setTopicArray] = useState<TopicType[]>([]);
   const [branchArray, setBranchArray] = useState<BranchType[]>([]);
@@ -29,6 +30,7 @@ export default function Index() {
       <HeaderSlider title="تجربه غذای سالم گیاهی به سبک ترخینه" />
       <SearchBox />
       <Topic topicArray={topicArray} branchArray={branchArray} />
+      <Intro />
     </>
   );
 }
