@@ -7,7 +7,10 @@ import { FoodTypes } from "../../types/Food.types";
 import SectionItem from "./SectionItem";
 import { NavLink } from "react-router-dom";
 import NoteIcon from "../../assets/svg/NoteIcon";
+import { AlbumType } from "../../types/Album.types";
+import Gallery from "./Gallery";
 export function Index() {
+  const [listAlbum, setListAlbum] = useState<AlbumType[]>([]);
   const [specialArray, setSpecialArray] = useState<FoodTypes[]>([]);
   const [popularArray, setPopularArray] = useState<FoodTypes[]>([]);
   const [foreignArray, setForeignArray] = useState<FoodTypes[]>([]);
@@ -31,8 +34,14 @@ export function Index() {
         });
       });
   }
+  function getListAlbum() {
+    fetch(`${BaseUrl}/albums`)
+      .then((res) => res.json())
+      .then((data) => setListAlbum(data));
+  }
   useEffect(() => {
     getFoods();
+    getListAlbum();
   }, []);
   return (
     <>
@@ -49,6 +58,7 @@ export function Index() {
         <NoteIcon size="w-4 h-4 md:w-6 md:h-6" />
         مشاهده منوی کامل
       </NavLink>
+      <Gallery listAlbum={listAlbum} />
     </>
   );
 }
