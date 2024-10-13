@@ -1,16 +1,20 @@
 import { useEffect, useState } from "react";
+import { NavLink } from "react-router-dom";
+import { CommentType } from "../../types/Comment.types";
+import { FoodTypes } from "../../types/Food.types";
+import { AlbumType } from "../../types/Album.types";
 import HeaderSlider from "../../components/HeaderSlider";
 import Nav from "../../components/Nav";
 import SearchBox from "../../components/SearchBox";
 import { BaseUrl } from "../../components/BaseUrl";
-import { FoodTypes } from "../../types/Food.types";
-import SectionItem from "./SectionItem";
-import { NavLink } from "react-router-dom";
+import Footer from "../../components/Footer";
 import NoteIcon from "../../assets/svg/NoteIcon";
-import { AlbumType } from "../../types/Album.types";
+import SectionItem from "./SectionItem";
 import Gallery from "./Gallery";
+import Comment from "./Comment";
 export function Index() {
   const [listAlbum, setListAlbum] = useState<AlbumType[]>([]);
+  const [commentArray, setCommentArray] = useState<CommentType[]>([]);
   const [specialArray, setSpecialArray] = useState<FoodTypes[]>([]);
   const [popularArray, setPopularArray] = useState<FoodTypes[]>([]);
   const [foreignArray, setForeignArray] = useState<FoodTypes[]>([]);
@@ -39,9 +43,15 @@ export function Index() {
       .then((res) => res.json())
       .then((data) => setListAlbum(data));
   }
+  function getComments() {
+    fetch(`${BaseUrl}/comments?_embed=user`)
+      .then((res) => res.json())
+      .then((data) => setCommentArray(data));
+  }
   useEffect(() => {
     getFoods();
     getListAlbum();
+    getComments();
   }, []);
   return (
     <>
@@ -59,6 +69,8 @@ export function Index() {
         مشاهده منوی کامل
       </NavLink>
       <Gallery listAlbum={listAlbum} />
+      <Comment commentArray={commentArray} />
+      <Footer />
     </>
   );
 }
