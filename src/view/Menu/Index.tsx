@@ -7,6 +7,7 @@ import { TopicType } from "../../types/Topic.types";
 import { FoodType } from "../../types/FoodType.types";
 import { BaseUrl } from "../../components/BaseUrl";
 import Footer from "../../components/Footer";
+import Search from "./Search";
 export function Index() {
   const [topicArray, setTopicArray] = useState<TopicType[]>([]);
   const [typeArray, setTypeArray] = useState<FoodType[]>([]);
@@ -33,6 +34,7 @@ export function Index() {
         <div className="container">
           <div className="flex flex-col md:flex-row items-start md:items-center gap-3 justify-between">
             <Type typeArray={typeArray} />
+            <Search />
           </div>
         </div>
       </section>
