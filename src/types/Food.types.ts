@@ -14,5 +14,5 @@ export type FoodTypes = {
   offerCount?: string;
   priceValue?: string;
   comment?: string;
-  star?: number;
+  star: number;
 };
