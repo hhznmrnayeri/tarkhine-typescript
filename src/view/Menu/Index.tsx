@@ -8,9 +8,11 @@ import { FoodType } from "../../types/FoodType.types";
 import { BaseUrl } from "../../components/BaseUrl";
 import Footer from "../../components/Footer";
 import Search from "./Search";
+import List from "./List";
 export function Index() {
   const [topicArray, setTopicArray] = useState<TopicType[]>([]);
   const [typeArray, setTypeArray] = useState<FoodType[]>([]);
+  const [foodList, setFoodList] = useState<FoodType[]>([]);
   function getTopics() {
     fetch(`${BaseUrl}/topics`)
       .then((res) => res.json())
@@ -21,9 +23,17 @@ export function Index() {
       .then((res) => res.json())
       .then((data) => setTypeArray(data));
   }
+  function getFoods() {
+    fetch(`${BaseUrl}/types?_embed=foods`)
+      .then((res) => res.json())
+      .then((data) => {
+        setFoodList(data);
+      });
+  }
   useEffect(() => {
     getTopics();
     getType();
+    getFoods();
   }, []);
   return (
     <>
@@ -38,6 +48,7 @@ export function Index() {
           </div>
         </div>
       </section>
+      <List foodList={foodList} />
       <Footer />
     </>
   );
