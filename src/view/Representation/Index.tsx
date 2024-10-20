@@ -1,6 +1,7 @@
 import Footer from "../../components/Footer";
 import Header from "../../components/Header";
 import Nav from "../../components/Nav";
+import Option from "./Option";
 export function Index() {
   return (
     <>
@@ -9,6 +10,7 @@ export function Index() {
         title="همین الان به خانواده بزرگ ترخینه بپیوندید!"
         background="bg-header-representation"
       />
+      <Option />
       <Footer />
     </>
   );
