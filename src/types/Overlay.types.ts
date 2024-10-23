@@ -1,5 +1,5 @@
 export type OverlayProps = {
   onHide: VoidFunction;
-  children: React.ReactNode;
+  children?: React.ReactNode;
   backgroundNone?: boolean;
 };
