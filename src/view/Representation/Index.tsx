@@ -2,6 +2,7 @@ import Footer from "../../components/Footer";
 import Header from "../../components/Header";
 import Nav from "../../components/Nav";
 import Advantage from "./Advantage";
+import Advice from "./Advice";
 import Option from "./Option";
 export function Index() {
   return (
@@ -13,6 +14,7 @@ export function Index() {
       />
       <Option />
       <Advantage />
+      <Advice />
       <Footer />
     </>
   );
