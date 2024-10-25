@@ -5,7 +5,7 @@ import SectionTitle from "./SectionTitle";
 export default function Advice() {
   const [showCalendar, setShowCalendar] = useState(false);
   const toggleCalendar = () => {
-    setShowCalendar(false);
+    setShowCalendar((prev) => !prev);
   };
   return (
     <>
