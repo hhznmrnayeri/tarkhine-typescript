@@ -5,6 +5,7 @@ import { Index as Representation } from "./view/Representation/Index";
 import { Index as About } from "./view/About/Index";
 import { Index as Contact } from "./view/Contact/Index";
 import { Index as Search } from "./view/Search/Index";
+import { Index as Ask } from "./view/Ask/Index";
 const routes = [
   { path: "/", element: <Index /> },
   { path: "branch", element: <Branch /> },
@@ -13,5 +14,6 @@ const routes = [
   { path: "about", element: <About /> },
   { path: "contact", element: <Contact /> },
   { path: "search/:food", element: <Search /> },
+  { path: "search/:food", element: <Ask /> },
 ];
 export default routes;
