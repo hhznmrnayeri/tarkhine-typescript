@@ -6,6 +6,9 @@ import { Index as About } from "./view/About/Index";
 import { Index as Contact } from "./view/Contact/Index";
 import { Index as Search } from "./view/Search/Index";
 import { Index as Ask } from "./view/Ask/Index";
+import QuestionSection from "./view/Ask/QuestionSection";
+import PrivacySection from "./view/Ask/PrivacySection";
+import RuleSection from "./view/Ask/RuleSection";
 const routes = [
   { path: "/", element: <Index /> },
   { path: "branch", element: <Branch /> },
@@ -14,6 +17,14 @@ const routes = [
   { path: "about", element: <About /> },
   { path: "contact", element: <Contact /> },
   { path: "search/:food", element: <Search /> },
-  { path: "search/:food", element: <Ask /> },
+  {
+    path: "question",
+    element: <Ask />,
+    children: [
+      { path: "", element: <QuestionSection /> },
+      { path: "rules", element: <RuleSection /> },
+      { path: "privacy", element: <PrivacySection /> },
+    ],
+  },
 ];
 export default routes;
