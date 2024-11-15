@@ -2,6 +2,7 @@ export type OrderItemType = {
   id: string;
   topicId?: string;
   typeId?: string;
+  foodId?: string;
   isFavorite?: boolean;
   isSpecial?: boolean;
   isPopular?: boolean;
