@@ -12,16 +12,47 @@ type SectionItemProps = {
   label: string;
 };
 export default function SectionItem({ array, label }: SectionItemProps) {
+  const list: FoodTypes[] = [];
+  switch (label) {
+    case "isSpecial": {
+      array.forEach((item) => {
+        if (item.isSpecial) {
+          list.push(item);
+        }
+      });
+      break;
+    }
+    case "isPopular": {
+      array.forEach((item) => {
+        if (item.isPopular) {
+          list.push(item);
+        }
+      });
+      break;
+    }
+    case "isForeign": {
+      array.forEach((item) => {
+        if (item.isForeign) {
+          list.push(item);
+        }
+      });
+      break;
+    }
+    default:
+      break;
+  }
   return (
     <section
-      className={`mt-6  mb-6  ${label === "popular" ? "bg-primary" : ""} py-6`}
+      className={`mt-6  mb-6  ${
+        label === "isPopular" ? "bg-primary" : ""
+      } py-6`}
     >
       <div className="container">
-        {label === "special" && <SectionTitle title="پیشنهاد ویژه" />}
-        {label === "popular" && (
+        {label === "isSpecial" && <SectionTitle title="پیشنهاد ویژه" />}
+        {label === "isPopular" && (
           <SectionTitle title="غذاهای محبوب" color="text-white" />
         )}
-        {label === "foreign" && <SectionTitle title="غذاهای غیر ایرانی" />}
+        {label === "isForeign" && <SectionTitle title="غذاهای غیر ایرانی" />}
         {/* swiper */}
         <div className="mt-3 md:mt-6 relative">
           {array.length && (
@@ -61,7 +92,7 @@ export default function SectionItem({ array, label }: SectionItemProps) {
               modules={[Navigation]}
               className=""
             >
-              {array.map((item) => (
+              {list.map((item) => (
                 <SwiperSlide key={`${label}-${item.id}`}>
                   <SlideItem {...item} />
                 </SwiperSlide>

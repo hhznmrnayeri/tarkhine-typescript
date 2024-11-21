@@ -9,10 +9,13 @@ import { BaseUrl } from "../../components/BaseUrl";
 import Footer from "../../components/Footer";
 import Search from "./Search";
 import List from "./List";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { getFoodsList } from "../../redux/foods/menuSlice";
 export function Index() {
   const [topicArray, setTopicArray] = useState<TopicType[]>([]);
   const [typeArray, setTypeArray] = useState<FoodType[]>([]);
-  const [foodList, setFoodList] = useState<FoodType[]>([]);
+  const foodList = useAppSelector((state) => state.menu) as FoodType[];
+  const dispatch = useAppDispatch();
   function getTopics() {
     fetch(`${BaseUrl}/topics`)
       .then((res) => res.json())
@@ -23,17 +26,10 @@ export function Index() {
       .then((res) => res.json())
       .then((data) => setTypeArray(data));
   }
-  function getFoods() {
-    fetch(`${BaseUrl}/types?_embed=foods`)
-      .then((res) => res.json())
-      .then((data) => {
-        setFoodList(data);
-      });
-  }
   useEffect(() => {
     getTopics();
     getType();
-    getFoods();
+    dispatch(getFoodsList());
   }, []);
   return (
     <>

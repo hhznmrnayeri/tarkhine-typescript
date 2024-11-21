@@ -2,8 +2,11 @@ import HeartFavoriteIcon from "../../assets/svg/HeartFavoriteIcon";
 import HeartIcon from "../../assets/svg/HeartIcon";
 import StarIcon from "../../assets/svg/StarIcon";
 import ConvertToPersian from "../../hooks/ConvertToPersian";
+import { addToFavorite, removeFavorite } from "../../redux/foods/foodSlice";
+import { useAppDispatch } from "../../redux/hooks";
 import { FoodTypes } from "../../types/Food.types";
 export default function SlideItem(props: FoodTypes) {
+  const dispatch = useAppDispatch();
   return (
     <div className="flex flex-col rounded md:rounded-lg border overflow-hidden border-gray-400">
       {/* result img */}
@@ -24,13 +27,13 @@ export default function SlideItem(props: FoodTypes) {
           <div className="flex flex-col items-start gap-1 text-2xs text-gray-500">
             {/* top box */}
             {props.isFavorite ? (
-              <button>
+              <button onClick={() => dispatch(removeFavorite(props.id))}>
                 <HeartFavoriteIcon size="w-4 h-4 text-error-100" />
               </button>
             ) : (
               <div className="flex items-center gap-1">
                 {/* add favorite */}
-                <button>
+                <button onClick={() => dispatch(addToFavorite(props.id))}>
                   <HeartIcon size="w-4 h-4" />
                 </button>
                 {/* text favorite */}

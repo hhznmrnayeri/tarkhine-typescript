@@ -13,9 +13,12 @@ import HeartIcon from "../../assets/svg/HeartIcon";
 import Overlay from "../../components/Overlay";
 import CloseIcon from "../../assets/svg/CloseIcon";
 import { type Swiper as SwiperTypes } from "swiper";
+import { useAppDispatch } from "../../redux/hooks";
+import { addToFavorite, removeFavorite } from "../../redux/foods/menuSlice";
 export default function FoodItem(props: FoodTypes) {
   const [showGalleryModal, setShowGalleryModal] = useState(false);
   const [thumbsSwiper, setThumbsSwiper] = useState<SwiperTypes | null>(null);
+  const dispatch = useAppDispatch();
   const openGalleryModal = () => {
     setShowGalleryModal(true);
   };
@@ -92,14 +95,14 @@ export default function FoodItem(props: FoodTypes) {
           {props.isFavorite ? (
             <button
               className="absolute w-4 h-4 md:w-6 md:h-6 bottom-1.5 right-0 top-auto left-auto md:left-4 md:top-0.5 md:bottom-auto md:right-auto md:invisible md:opacity-0 md:group-hover:visible md:group-hover:opacity-100 transition-all duration-300"
-              // onClick={() => removeFavorite(props.id)}
+              onClick={() => dispatch(removeFavorite(props.id))}
             >
               <HeartFavoriteIcon size="w-4 h-4 md:w-6 md:h-6" />
             </button>
           ) : (
             <button
               className="absolute w-4 h-4 md:w-6 md:h-6 bottom-1.5 right-0 top-auto left-auto md:left-4 md:top-0.5 md:bottom-auto md:right-auto md:invisible md:opacity-0 md:group-hover:visible md:group-hover:opacity-100 transition-all duration-300"
-              // onClick={() => addFavorite(props.id)}
+              onClick={() => dispatch(addToFavorite(props.id))}
             >
               <HeartIcon size="w-4 h-4 md:w-6 md:h-6" />
             </button>

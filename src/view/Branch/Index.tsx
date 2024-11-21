@@ -12,32 +12,14 @@ import NoteIcon from "../../assets/svg/NoteIcon";
 import SectionItem from "./SectionItem";
 import Gallery from "./Gallery";
 import Comment from "./Comment";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { getFoods } from "../../redux/foods/foodSlice";
 export function Index() {
   const [listAlbum, setListAlbum] = useState<AlbumType[]>([]);
   const [commentArray, setCommentArray] = useState<CommentType[]>([]);
-  const [specialArray, setSpecialArray] = useState<FoodTypes[]>([]);
-  const [popularArray, setPopularArray] = useState<FoodTypes[]>([]);
-  const [foreignArray, setForeignArray] = useState<FoodTypes[]>([]);
-  function getFoods() {
-    setForeignArray([]);
-    setSpecialArray([]);
-    setPopularArray([]);
-    fetch(`${BaseUrl}/foods`)
-      .then((res) => res.json())
-      .then((data) => {
-        data.forEach((item: FoodTypes) => {
-          if (item.isSpecial) {
-            setSpecialArray((prev) => [...prev, item]);
-          }
-          if (item.isPopular) {
-            setPopularArray((prev) => [...prev, item]);
-          }
-          if (item.isForeign) {
-            setForeignArray((prev) => [...prev, item]);
-          }
-        });
-      });
-  }
+  const foodList = useAppSelector((state) => state.foods) as FoodTypes[];
+  console.log(foodList);
+  const dispatch = useAppDispatch();
   function getListAlbum() {
     fetch(`${BaseUrl}/albums`)
       .then((res) => res.json())
@@ -49,7 +31,7 @@ export function Index() {
       .then((data) => setCommentArray(data));
   }
   useEffect(() => {
-    getFoods();
+    dispatch(getFoods());
     getListAlbum();
     getComments();
   }, []);
@@ -58,9 +40,9 @@ export function Index() {
       <Nav title="branch" />
       <HeaderSlider title="طعم بی‌نظیر طبیعت!" />
       <SearchBox />
-      <SectionItem array={specialArray} label="special" />
-      <SectionItem array={popularArray} label="popular" />
-      <SectionItem array={foreignArray} label="foreign" />
+      <SectionItem array={foodList} label="isSpecial" />
+      <SectionItem array={foodList} label="isPopular" />
+      <SectionItem array={foodList} label="isForeign" />
       <NavLink
         to="/menu"
         className="flex-center mx-auto border mt-3 md:mt-7 border-primary text-primary gap-2 p-2 rounded md:px-4 md:font-estedadMedium text-xs md:text-base w-52"

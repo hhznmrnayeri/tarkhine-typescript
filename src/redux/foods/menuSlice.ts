@@ -1,10 +1,10 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { BaseUrl } from "../../components/BaseUrl";
-import { FoodTypes } from "../../types/Food.types";
-export const getFoods = createAsyncThunk("foods/getFoods", async () => {
-  return await fetch(`${BaseUrl}/foods`)
+import { FoodType } from "../../types/FoodType.types";
+export const getFoodsList = createAsyncThunk("foods/getFoodsList", async () => {
+  return fetch(`${BaseUrl}/types?_embed=foods`)
     .then((res) => res.json())
-    .then((data) => data as FoodTypes[]);
+    .then((data) => data as FoodType[]);
 });
 export const addToFavorite = createAsyncThunk(
   "foods/addToFavorite",
@@ -18,9 +18,9 @@ export const addToFavorite = createAsyncThunk(
     })
       .then((res) => res.json())
       .then(() =>
-        fetch(`${BaseUrl}/foods`)
+        fetch(`${BaseUrl}/types?_embed=foods`)
           .then((res) => res.json())
-          .then((data) => data as FoodTypes[])
+          .then((data) => data as FoodType[])
       );
   }
 );
@@ -36,19 +36,19 @@ export const removeFavorite = createAsyncThunk(
     })
       .then((res) => res.json())
       .then(() =>
-        fetch(`${BaseUrl}/foods`)
+        fetch(`${BaseUrl}/types?_embed=foods`)
           .then((res) => res.json())
-          .then((data) => data as FoodTypes[])
+          .then((data) => data as FoodType[])
       );
   }
 );
-const initialState: FoodTypes[] = [];
-const foodSlice = createSlice({
+const initialState: FoodType[] = [];
+const menuSlice = createSlice({
   name: "foods",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(getFoods.fulfilled, (_state, action) => action.payload);
+    builder.addCase(getFoodsList.fulfilled, (_state, action) => action.payload);
     builder.addCase(
       addToFavorite.fulfilled,
       (_state, action) => action.payload
@@ -59,5 +59,5 @@ const foodSlice = createSlice({
     );
   },
 });
-export const foodActions = foodSlice.actions;
-export default foodSlice.reducer;
+export const foodActions = menuSlice.actions;
+export default menuSlice.reducer;
