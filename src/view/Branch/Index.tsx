@@ -18,7 +18,6 @@ export function Index() {
   const [listAlbum, setListAlbum] = useState<AlbumType[]>([]);
   const [commentArray, setCommentArray] = useState<CommentType[]>([]);
   const foodList = useAppSelector((state) => state.foods) as FoodTypes[];
-  console.log(foodList);
   const dispatch = useAppDispatch();
   function getListAlbum() {
     fetch(`${BaseUrl}/albums`)

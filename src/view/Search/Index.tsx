@@ -1,30 +1,35 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { BaseUrl } from "../../components/BaseUrl";
+// import { BaseUrl } from "../../components/BaseUrl";
 import Nav from "../../components/Nav";
 import SearchIcon from "../../assets/svg/SearchIcon";
 import Footer from "../../components/Footer";
 import { FoodTypes } from "../../types/Food.types";
 import ResultItem from "./ResultItem";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { getFoods } from "../../redux/foods/foodSlice";
 export function Index() {
   const [resultArray, setResultArray] = useState<FoodTypes[]>([]);
   const { food } = useParams();
   const [searchValue, setSearchValue] = useState(food);
+  const foodList = useAppSelector((state) => state.foods) as FoodTypes[];
+  const dispatch = useAppDispatch();
   function searchFood() {
     setResultArray([]);
     if (searchValue) {
-      fetch(`${BaseUrl}/foods`)
-        .then((res) => res.json())
-        .then((data) => {
-          data.forEach((item: FoodTypes) => {
-            if (item.title.includes(searchValue)) {
-              setResultArray((prev) => [...prev, item]);
-            }
-          });
-        });
+      // fetch(`${BaseUrl}/foods`)
+      //   .then((res) => res.json())
+      //   .then((data) => {
+      foodList.forEach((item: FoodTypes) => {
+        if (item.title.includes(searchValue)) {
+          setResultArray((prev) => [...prev, item]);
+        }
+      });
+      // });
     }
   }
   useEffect(() => {
+    dispatch(getFoods());
     searchFood();
   }, []);
   return (

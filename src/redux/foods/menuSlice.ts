@@ -1,13 +1,13 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { BaseUrl } from "../../components/BaseUrl";
 import { FoodType } from "../../types/FoodType.types";
-export const getFoodsList = createAsyncThunk("foods/getFoodsList", async () => {
+export const getFoodsList = createAsyncThunk("menu/getFoodsList", async () => {
   return fetch(`${BaseUrl}/types?_embed=foods`)
     .then((res) => res.json())
     .then((data) => data as FoodType[]);
 });
 export const addToFavorite = createAsyncThunk(
-  "foods/addToFavorite",
+  "menu/addToFavorite",
   async (id: string) => {
     return fetch(`${BaseUrl}/foods/${id}`, {
       method: "PATCH",
@@ -25,7 +25,7 @@ export const addToFavorite = createAsyncThunk(
   }
 );
 export const removeFavorite = createAsyncThunk(
-  "foods/removeFavorite",
+  "menu/removeFavorite",
   async (id: string) => {
     return fetch(`${BaseUrl}/foods/${id}`, {
       method: "PATCH",
@@ -44,7 +44,7 @@ export const removeFavorite = createAsyncThunk(
 );
 const initialState: FoodType[] = [];
 const menuSlice = createSlice({
-  name: "foods",
+  name: "menu",
   initialState,
   reducers: {},
   extraReducers: (builder) => {

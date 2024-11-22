@@ -1,10 +1,25 @@
+import { useState, useEffect } from "react";
 import HeartFavoriteIcon from "../../assets/svg/HeartFavoriteIcon";
 import HeartIcon from "../../assets/svg/HeartIcon";
 import StarIcon from "../../assets/svg/StarIcon";
 import ConvertToPersian from "../../hooks/ConvertToPersian";
+import { addToFavorite, removeFavorite } from "../../redux/foods/foodSlice";
+import { useAppDispatch } from "../../redux/hooks";
 import { FoodTypes } from "../../types/Food.types";
-
 export default function ResultItem(props: FoodTypes) {
+  const dispatch = useAppDispatch();
+  const [isFavorite, setIsFavorite] = useState(props.isFavorite);
+  const handleAddFavorite = () => {
+    setIsFavorite(true);
+    dispatch(addToFavorite(props.id));
+  };
+  const handleRemoveFavorite = () => {
+    setIsFavorite(false);
+    dispatch(removeFavorite(props.id));
+  };
+  useEffect(() => {
+    setIsFavorite(props.isFavorite);
+  }, [props.isFavorite]);
   return (
     <div className="col-span-1 sm:col-span-6 xl:col-span-3 flex flex-col rounded md:rounded-lg border border-gray-400 overflow-hidden">
       {/* result img */}
@@ -26,17 +41,17 @@ export default function ResultItem(props: FoodTypes) {
             {/* top box */}
             <div className="flex items-center gap-1">
               {/* add favorite */}
-              {props.isFavorite ? (
+              {isFavorite ? (
                 <button
                   className="add__favorite"
-                  //   onClick={() => removeFavorite(props.id)}
+                  onClick={handleRemoveFavorite}
                 >
                   <HeartFavoriteIcon size="w-4 h-4" />
                 </button>
               ) : (
                 <button
                   className="flex items-center gap-1"
-                  //   onClick={() => addFavorite(props.id)}
+                  onClick={handleAddFavorite}
                 >
                   <HeartIcon size="w-4 h-4" />
                   <span>افزودن به علاقمندی‌ها</span>
@@ -90,10 +105,7 @@ export default function ResultItem(props: FoodTypes) {
           </div>
         </div>
         {/* btn result */}
-        <button
-          className="text-2xs md:text-base md:font-estedadMedium text-white px-4 py-2 w-full bg-primary flex-center rounded"
-          //   onClick={() => addItemToBasket(props.id)}
-        >
+        <button className="text-2xs md:text-base md:font-estedadMedium text-white px-4 py-2 w-full bg-primary flex-center rounded">
           افزودن به سبد خرید
         </button>
       </div>

@@ -3,7 +3,21 @@ import StarIcon from "../../assets/svg/StarIcon";
 import StarEmptyIcon from "../../assets/svg/StarEmptyIcon";
 import HeartFavoriteIcon from "../../assets/svg/HeartFavoriteIcon";
 import { FoodTypes } from "../../types/Food.types";
-export default function FavoriteItem(props: FoodTypes) {
+import { useAppDispatch } from "../../redux/hooks";
+import { removeFavorite } from "../../redux/foods/foodSlice";
+import { useEffect, useState } from "react";
+type FavoriteItemProps = FoodTypes & { onRemoveFavorite: (id: string) => void };
+export default function FavoriteItem(props: FavoriteItemProps) {
+  const dispatch = useAppDispatch();
+  const [isFavorite, setIsFavorite] = useState(props.isFavorite);
+  const handleRemoveFavorite = () => {
+    setIsFavorite(false);
+    dispatch(removeFavorite(props.id));
+    props.onRemoveFavorite(props.id);
+  };
+  useEffect(() => {
+    setIsFavorite(props.isFavorite);
+  }, [props.isFavorite]);
   return (
     <div className="col-span-6 md:col-span-12 lg:col-span-6 xl:col-span-4 flex flex-col overflow-hidden rounded md:rounded-lg border border-gray-400">
       {/* img */}
@@ -21,8 +35,8 @@ export default function FavoriteItem(props: FoodTypes) {
             {props.title}
           </h4>
           {/* heart btn */}
-          {props.isFavorite ? (
-            <button>
+          {isFavorite ? (
+            <button onClick={handleRemoveFavorite}>
               <HeartFavoriteIcon size="w-4 h-4 md:w-6 md:h-6" />
             </button>
           ) : null}
