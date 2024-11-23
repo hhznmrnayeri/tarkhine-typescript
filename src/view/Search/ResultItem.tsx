@@ -6,6 +6,7 @@ import ConvertToPersian from "../../hooks/ConvertToPersian";
 import { addToFavorite, removeFavorite } from "../../redux/foods/foodSlice";
 import { useAppDispatch } from "../../redux/hooks";
 import { FoodTypes } from "../../types/Food.types";
+import { addItemToBasket } from "../../redux/basket/basketSlice";
 export default function ResultItem(props: FoodTypes) {
   const dispatch = useAppDispatch();
   const [isFavorite, setIsFavorite] = useState(props.isFavorite);
@@ -105,7 +106,10 @@ export default function ResultItem(props: FoodTypes) {
           </div>
         </div>
         {/* btn result */}
-        <button className="text-2xs md:text-base md:font-estedadMedium text-white px-4 py-2 w-full bg-primary flex-center rounded">
+        <button
+          className="text-2xs md:text-base md:font-estedadMedium text-white px-4 py-2 w-full bg-primary flex-center rounded"
+          onClick={() => dispatch(addItemToBasket(props))}
+        >
           افزودن به سبد خرید
         </button>
       </div>
