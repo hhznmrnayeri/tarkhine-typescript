@@ -2,9 +2,16 @@ import StarEmptyIcon from "../../assets/svg/StarEmptyIcon";
 import StarIcon from "../../assets/svg/StarIcon";
 import TrashIcon from "../../assets/svg/TrashIcon";
 import ConvertToPersian from "../../hooks/ConvertToPersian";
+import {
+  addItemToBasket,
+  minusCountItem,
+  removeItemFromBasket,
+} from "../../redux/basket/basketSlice";
+import { useAppDispatch } from "../../redux/hooks";
 import { OrderItemType } from "../../types/OrderItem.types";
 
 export default function OrderItem(props: OrderItemType) {
+  const dispatch = useAppDispatch();
   return (
     <div
       dir="rtl"
@@ -44,18 +51,31 @@ export default function OrderItem(props: OrderItemType) {
             {/* count wrapper */}
             <div className="flex items-center gap-2 px-1 bg-tint-100 rounded text-primary md:text-xl">
               {/* plus btn */}
-              <button className="font-estedadBold">+</button>
+              <button
+                className="font-estedadBold"
+                onClick={() => dispatch(addItemToBasket(props))}
+              >
+                +
+              </button>
               {/* count food */}
               <span className="count__food text-sm">
                 {ConvertToPersian({ num: props.count })}
               </span>
               {/* minus btn */}
               {props.count === 1 ? (
-                <button className="minus__btn">
+                <button
+                  className="minus__btn"
+                  onClick={() => dispatch(removeItemFromBasket(props))}
+                >
                   <TrashIcon size="w-4 h-4" />
                 </button>
               ) : (
-                <button className="font-estedadBold">-</button>
+                <button
+                  className="font-estedadBold"
+                  onClick={() => dispatch(minusCountItem(props))}
+                >
+                  -
+                </button>
               )}
             </div>
           </div>
@@ -63,7 +83,10 @@ export default function OrderItem(props: OrderItemType) {
         {/* left box */}
         <div className="flex flex-col items-end gap-8 h-full justify-between">
           {/* trash btn */}
-          <button className="trash__btn hidden md:block">
+          <button
+            className="trash__btn hidden md:block"
+            onClick={() => dispatch(removeItemFromBasket(props))}
+          >
             <TrashIcon size="w-6 h-6" />
           </button>
           {/* price content */}

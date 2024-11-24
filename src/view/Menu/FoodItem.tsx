@@ -15,6 +15,7 @@ import CloseIcon from "../../assets/svg/CloseIcon";
 import { type Swiper as SwiperTypes } from "swiper";
 import { useAppDispatch } from "../../redux/hooks";
 import { addToFavorite, removeFavorite } from "../../redux/foods/menuSlice";
+import { addItemToBasket } from "../../redux/basket/basketSlice";
 export default function FoodItem(props: FoodTypes) {
   const [showGalleryModal, setShowGalleryModal] = useState(false);
   const [thumbsSwiper, setThumbsSwiper] = useState<SwiperTypes | null>(null);
@@ -86,7 +87,7 @@ export default function FoodItem(props: FoodTypes) {
             {/* item btn */}
             <button
               className="item__btn flex-center p-2 md:w-60 text-white bg-primary rounded text-2xs md:text-base md:font-estedadMedium md:px-4"
-              // onClick={() => addItemToBasket(props.id)}
+              onClick={() => dispatch(addItemToBasket(props))}
             >
               افزودن به سبد خرید
             </button>

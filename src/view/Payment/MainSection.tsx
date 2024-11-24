@@ -15,12 +15,56 @@ import WarningIcon from "../../assets/svg/WarningIcon";
 import Empty from "../../components/Empty";
 import Overlay from "../../components/Overlay";
 import CloseIcon from "../../assets/svg/CloseIcon";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import ConvertToPersian from "../../hooks/ConvertToPersian";
+import {
+  clearBasket,
+  getOfferBasketPrice,
+  getTotalBasketPrice,
+  getTotalBasketQuantity,
+  resetBasket,
+} from "../../redux/basket/basketSlice";
+import { BaseUrl } from "../../components/BaseUrl";
 export default function MainSection() {
   const [sectionState, setSectionState] = useState("basket");
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const basketStore = useAppSelector((state) => state.basket);
+  const addressArray = useAppSelector((state) => state.address);
+  const totalBasketQuantity = useAppSelector((state) =>
+    getTotalBasketQuantity(state)
+  );
+  const totalBasketPrice = useAppSelector((state) =>
+    getTotalBasketPrice(state)
+  );
+  const offerBasketPrice = useAppSelector((state) =>
+    getOfferBasketPrice(state)
+  );
   const toggleDeleteModal = () => {
     setShowDeleteModal((prev) => !prev);
+  };
+  const registerOrderItem = async () => {
+    const requestAddress = addressArray.find((item) => item.active);
+    const newOrder = {
+      list: basketStore.list,
+      address: requestAddress?.caption,
+      caption: basketStore.caption,
+      offPrices: offerBasketPrice,
+      sumPrices: totalBasketPrice,
+      branchesId: "1",
+      isComplete: true,
+      sendState: basketStore.sendState,
+      time: Date.now(),
+    };
+    console.log(newOrder);
+    await fetch(`${BaseUrl}/order`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(newOrder),
+    });
+    await dispatch(resetBasket());
+    navigate("/payment");
   };
   const renderSection = () => {
     switch (sectionState) {
@@ -61,7 +105,10 @@ export default function MainSection() {
     }
     if (sectionState === "pay") {
       return (
-        <button className="state__btn2 w-full text-white bg-primary flex-center gap-1 md:gap-2 rounded p-2 md:px-4 text-xs md:text-base md:font-estedadMedium">
+        <button
+          className="state__btn2 w-full text-white bg-primary flex-center gap-1 md:gap-2 rounded p-2 md:px-4 text-xs md:text-base md:font-estedadMedium"
+          onClick={registerOrderItem}
+        >
           <span className="flex items-center gap-2">
             <CardIcon size="w-4 md:w-6 h-4 md:h-6" />
             تایید و پرداخت
@@ -138,8 +185,7 @@ export default function MainSection() {
           </button>
         </div>
         <section className="my-6 md:my-10">
-          {/* {list?.length ? ( */}
-          {sectionState === "basket" ? (
+          {basketStore.list.length ? (
             <div className="basket__wrapper grid grid-cols-1 lg:grid-cols-12 gap-3 md:gap-6 p-6 md:p-0 rounded-lg md:rounded-none border md:border-none border-gray-400 overflow-hidden">
               {renderSection()}
               <div
@@ -151,7 +197,7 @@ export default function MainSection() {
                   <h4>
                     سبد خرید(
                     <span className="text-sm">
-                      {/* {ConvertToPersian(list.length)} */}
+                      {ConvertToPersian({ num: totalBasketQuantity })}
                     </span>
                     )
                   </h4>
@@ -162,14 +208,15 @@ export default function MainSection() {
                 <div className="flex items-center justify-between py-3 border-y md:border-t-0 md:border-b border-gray-400">
                   <h5 className="text-sm">تخفیف محصولات</h5>
                   <span className="text-gray-700 text-sm">
-                    {/* {ConvertToPersian(offPrices)} تومان */}
+                    {ConvertToPersian({ num: offerBasketPrice })} تومان
                   </span>
                 </div>
                 <div className="flex flex-col gap-2 py-3 border-b border-gray-400">
                   <div className="flex items-center justify-between">
                     <h5 className="text-sm">هزینه ارسال</h5>
                     <span className="text-gray-700 text-sm">
-                      {/* {ConvertToPersian(shippingPrice)} تومان */}
+                      {ConvertToPersian({ num: basketStore.shippingPrice })}
+                      تومان
                     </span>
                   </div>
                   {sectionState === "basket" && (
@@ -183,7 +230,7 @@ export default function MainSection() {
                 <div className="flex items-center justify-between py-3">
                   <h5 className="text-sm">مبلغ قابل پرداخت</h5>
                   <span className="text-primary text-sm">
-                    {/* {ConvertToPersian(sumPrices)} تومان */}
+                    {ConvertToPersian({ num: totalBasketPrice })} تومان
                   </span>
                 </div>
                 {renderOrderButton()}
@@ -220,7 +267,13 @@ export default function MainSection() {
               >
                 بازگشت
               </button>
-              <button className="delete__btn bg-error-200 rounded flex-center p-2 text-error text-xs md:px-4 md:text-base md:font-estedadMedium flex-1">
+              <button
+                className="delete__btn bg-error-200 rounded flex-center p-2 text-error text-xs md:px-4 md:text-base md:font-estedadMedium flex-1"
+                onClick={() => {
+                  dispatch(clearBasket());
+                  toggleDeleteModal();
+                }}
+              >
                 حذف
               </button>
             </div>

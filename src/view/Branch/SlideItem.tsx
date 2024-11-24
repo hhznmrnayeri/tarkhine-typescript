@@ -2,6 +2,7 @@ import HeartFavoriteIcon from "../../assets/svg/HeartFavoriteIcon";
 import HeartIcon from "../../assets/svg/HeartIcon";
 import StarIcon from "../../assets/svg/StarIcon";
 import ConvertToPersian from "../../hooks/ConvertToPersian";
+import { addItemToBasket } from "../../redux/basket/basketSlice";
 import { addToFavorite, removeFavorite } from "../../redux/foods/foodSlice";
 import { useAppDispatch } from "../../redux/hooks";
 import { FoodTypes } from "../../types/Food.types";
@@ -84,7 +85,10 @@ export default function SlideItem(props: FoodTypes) {
           </div>
         </div>
         {/* btn result */}
-        <button className="text-2xs md:text-base md:font-estedadMedium text-white px-4 py-2 w-full bg-primary flex-center rounded">
+        <button
+          onClick={() => dispatch(addItemToBasket(props))}
+          className="text-2xs md:text-base md:font-estedadMedium text-white px-4 py-2 w-full bg-primary flex-center rounded"
+        >
           افزودن به سبد خرید
         </button>
       </div>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TruckIcon from "../../assets/svg/TruckIcon";
 import TruckFastIcon from "../../assets/svg/TruckFastIcon";
 import ShoppingBagIcon from "../../assets/svg/ShoppingBagIcon";
@@ -7,11 +7,19 @@ import Empty from "../../components/Empty";
 import Overlay from "../../components/Overlay";
 import CloseIcon from "../../assets/svg/CloseIcon";
 import GpsIcon from "../../assets/svg/GpsIcon";
-import { AddressType } from "../../types/Address.types";
 import AddressItem from "../../components/AddressItem";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import {
+  setCaption,
+  setCourierDelivery,
+  setPersonDelivery,
+} from "../../redux/basket/basketSlice";
+import { getAddress } from "../../redux/address/addressSlice";
+import { BaseUrl } from "../../components/BaseUrl";
 export default function Complete() {
   const [stateDelivery, setStateDelivery] = useState("courier");
-  const [addressArray] = useState<AddressType[]>([]);
+  const addressArray = useAppSelector((state) => state.address);
+  const dispatch = useAppDispatch();
   const [showLocationModal, setShowLocationModal] = useState(false);
   const [showAddressModal, setShowAddressModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -19,6 +27,7 @@ export default function Complete() {
   const [phoneAddress, setPhoneAddress] = useState("");
   const [captionAddress, setCaptionAddress] = useState("");
   const [captionOrder, setCaptionOrder] = useState("");
+  const [mainId, setMainId] = useState<string | null>(null);
   const toggleAddressModal = () => {
     setShowAddressModal((prev) => !prev);
   };
@@ -28,6 +37,116 @@ export default function Complete() {
   const toggleEditModal = () => {
     setShowEditModal((prev) => !prev);
   };
+  const resetState = () => {
+    setNameAddress("");
+    setPhoneAddress("");
+    setCaptionAddress("");
+    setMainId(null);
+  };
+  const addAddressItem = () => {
+    addressArray.forEach((item) => {
+      const newItem = { active: false };
+      fetch(`${BaseUrl}/address/${item.id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newItem),
+      })
+        .then((res) => res.json())
+        .then(() => {});
+    });
+    const newItem = {
+      id: `${Date.now()}`,
+      caption: captionAddress,
+      name: nameAddress,
+      phone: Number(phoneAddress),
+      active: true,
+      onEdit: () => {},
+      onRemove: () => {},
+      onActive: () => {},
+    };
+    fetch(`${BaseUrl}/address`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newItem),
+    })
+      .then((res) => res.json())
+      .then(() => {
+        dispatch(getAddress());
+        resetState();
+        toggleAddressModal();
+      });
+  };
+  const updateAddressItem = () => {
+    const newItem = {
+      caption: captionAddress,
+      name: nameAddress,
+      phone: phoneAddress,
+      active: true,
+    };
+    fetch(`${BaseUrl}/address/${mainId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newItem),
+    })
+      .then((res) => res.json())
+      .then(() => {
+        dispatch(getAddress());
+        resetState();
+        toggleEditModal();
+      });
+  };
+  const openEditModal = (id: string) => {
+    const requestItem = addressArray.find((item) => item.id === id);
+    if (requestItem) {
+      setNameAddress(requestItem.name);
+      setPhoneAddress(String(requestItem.phone));
+      setCaptionAddress(requestItem.caption);
+      setMainId(requestItem.id);
+      toggleEditModal();
+    }
+  };
+  const removeAddressItem = (id: string) => {
+    fetch(`${BaseUrl}/address/${id}`, {
+      method: "DELETE",
+    })
+      .then((res) => res.json())
+      .then(() => dispatch(getAddress()));
+  };
+  const activeAddressItem = (id: string) => {
+    addressArray.forEach((item) => {
+      const newItem = { active: false };
+      fetch(`${BaseUrl}/address/${item.id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newItem),
+      })
+        .then((res) => res.json())
+        .then(() => {});
+    });
+    const newItem = { active: true };
+    fetch(`${BaseUrl}/address/${id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newItem),
+    })
+      .then((res) => res.json())
+      .then(() => {
+        dispatch(getAddress());
+      });
+  };
+  useEffect(() => {
+    dispatch(getAddress());
+  }, []);
   return (
     <>
       <div className="col-span-1 lg:col-span-7 flex flex-col overflow-hidden">
@@ -42,6 +161,7 @@ export default function Complete() {
           <button
             onClick={() => {
               setStateDelivery("courier");
+              dispatch(setCourierDelivery());
             }}
             className={`${
               stateDelivery === "courier" ? "state__delivery--active" : ""
@@ -57,6 +177,7 @@ export default function Complete() {
           <button
             onClick={() => {
               setStateDelivery("person");
+              dispatch(setPersonDelivery());
             }}
             className={`${
               stateDelivery === "person" ? "state__delivery--active" : ""
@@ -85,7 +206,10 @@ export default function Complete() {
                   آدرس‌ها
                 </h3>
                 {/* add address btn */}
-                <button className="add__address--btn text-primary flex items-center gap-1 text-xs">
+                <button
+                  className="add__address--btn text-primary flex items-center gap-1 text-xs"
+                  onClick={toggleLocationModal}
+                >
                   <span className="w-4 h-4 border border-primary flex-center rounded-full">
                     +
                   </span>
@@ -96,9 +220,14 @@ export default function Complete() {
               {addressArray.length ? (
                 <div className="flex items-start justify-between flex-col xl:flex-row flex-wrap pt-4 gap-2 md:gap-4">
                   {addressArray.map((item, index) => (
-                    <AddressItem key={index + 1} {...item} />
+                    <AddressItem
+                      key={index + 1}
+                      {...item}
+                      onEdit={openEditModal}
+                      onRemove={removeAddressItem}
+                      onActive={activeAddressItem}
+                    />
                   ))}
-                  {/* <AddressItem caption='' name='' user='' phone=''/> */}
                 </div>
               ) : (
                 <Empty caption="شما در حال حاضر هیچ آدرسی ثبت نکرده‌اید!" />
@@ -149,6 +278,7 @@ export default function Complete() {
           value={captionOrder}
           onChange={(e) => {
             setCaptionOrder(e.target.value);
+            dispatch(setCaption(e.target.value));
           }}
           rows={4}
           placeholder="توضیحات سفارش"
@@ -196,7 +326,13 @@ export default function Complete() {
                   ولیعصر، خیابان بزرگمهر، کوچه نسیم
                 </p>
                 {/* submit btn */}
-                <button className="bg-primary text-white text-xs md:text-base md:font-estedadMedium flex-center p-2 md:px-4 rounded w-64">
+                <button
+                  className="bg-primary text-white text-xs md:text-base md:font-estedadMedium flex-center p-2 md:px-4 rounded w-64"
+                  onClick={() => {
+                    toggleLocationModal();
+                    toggleAddressModal();
+                  }}
+                >
                   ثبت موقعیت
                 </button>
               </div>
@@ -263,7 +399,10 @@ export default function Complete() {
                   انصراف
                 </button>
                 {/* submit address */}
-                <button className="text-white bg-primary flex-1 flex-center rounded p-2">
+                <button
+                  className="text-white bg-primary flex-1 flex-center rounded p-2"
+                  onClick={addAddressItem}
+                >
                   ثبت آدرس
                 </button>
               </div>
@@ -332,7 +471,10 @@ export default function Complete() {
                   انصراف
                 </button>
                 {/* submit address */}
-                <button className="text-white bg-primary flex-1 flex-center rounded p-2">
+                <button
+                  className="text-white bg-primary flex-1 flex-center rounded p-2"
+                  onClick={updateAddressItem}
+                >
                   ثبت آدرس
                 </button>
               </div>

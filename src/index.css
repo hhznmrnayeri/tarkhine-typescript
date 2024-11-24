@@ -219,6 +219,9 @@
     content: "";
     @apply absolute h-px border border-dashed border-primary flex-1 right-full lg:-left-1/2 w-14 xs:w-20 sm:w-30 md:w-1/12 lg:w-1/2;
   }
+  .checkCode__btn:disabled {
+    @apply bg-gray-400;
+  }
 }
 @layer utilities {
   .flex-center {

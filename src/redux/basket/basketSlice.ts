@@ -2,10 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { BasketType } from "../../types/Basket.types";
 const initialState: BasketType = {
   list: [],
-  address: "",
   caption: "",
-  offPrices: 0,
-  sumPrices: 0,
   useCode: true,
   statePay: "online",
   sendState: "courier",
@@ -43,6 +40,29 @@ const basketSlice = createSlice({
     clearBasket(state) {
       state.list = [];
     },
+    setCourierDelivery(state) {
+      state.sendState = "courier";
+      state.shippingPrice = 30000;
+    },
+    setPersonDelivery(state) {
+      state.sendState = "person";
+      state.shippingPrice = 0;
+    },
+    setCaption(state, action) {
+      state.caption = action.payload;
+    },
+    setOnlinePay(state) {
+      state.statePay = "online";
+    },
+    setOfflinePay(state) {
+      state.statePay = "offline";
+    },
+    checkOffCode(state) {
+      state.useCode = false;
+    },
+    resetBasket() {
+      return initialState;
+    },
   },
 });
 export const {
@@ -50,6 +70,13 @@ export const {
   removeItemFromBasket,
   minusCountItem,
   clearBasket,
+  setCourierDelivery,
+  setPersonDelivery,
+  setCaption,
+  setOfflinePay,
+  setOnlinePay,
+  checkOffCode,
+  resetBasket,
 } = basketSlice.actions;
 export default basketSlice.reducer;
 
@@ -61,7 +88,11 @@ export const getTotalBasketPrice = (state: { basket: BasketType }) => {
     (sum: number, item) => sum + item.count * Number(item.priceValue),
     0
   );
-  return sumValue + state.basket.shippingPrice;
+  if (state.basket.useCode) {
+    return sumValue + state.basket.shippingPrice;
+  } else {
+    return sumValue + state.basket.shippingPrice - 60000;
+  }
 };
 export const getOfferBasketPrice = (state: { basket: BasketType }) => {
   const offerValue = state.basket.list.reduce((sum: number, item) => {
@@ -72,5 +103,9 @@ export const getOfferBasketPrice = (state: { basket: BasketType }) => {
     }
     return sum;
   }, 0);
-  return offerValue;
+  if (state.basket.useCode) {
+    return offerValue;
+  } else {
+    return offerValue + 60000;
+  }
 };
