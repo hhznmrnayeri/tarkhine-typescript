@@ -41,7 +41,7 @@ export default function OrderItem(props: OrderResultType) {
     .padStart(2, "0");
   function getFood() {
     props.list.forEach((item) => {
-      fetch(`${BaseUrl}/foods/${item.foodId}`)
+      fetch(`${BaseUrl}/foods/${item.id}`)
         .then((res) => res.json())
         .then((data) => {
           setFoodList((prev) => [...prev, { ...data, count: item.count }]);

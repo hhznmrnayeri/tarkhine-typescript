@@ -6,6 +6,7 @@ import { FoodTypes } from "../../types/Food.types";
 import { useAppDispatch } from "../../redux/hooks";
 import { removeFavorite } from "../../redux/foods/foodSlice";
 import { useEffect, useState } from "react";
+import { addItemToBasket } from "../../redux/basket/basketSlice";
 type FavoriteItemProps = FoodTypes & { onRemoveFavorite: (id: string) => void };
 export default function FavoriteItem(props: FavoriteItemProps) {
   const dispatch = useAppDispatch();
@@ -70,7 +71,7 @@ export default function FavoriteItem(props: FavoriteItemProps) {
         {/* btn */}
         <button
           className="text-2xs text-white bg-primary md:font-estedadMedium md:text-base rounded p-2 md:px-4 w-full h-10 mt-2 md:mt-6"
-          //   onClick={() => addItemToBasket(props.id)}
+          onClick={() => dispatch(addItemToBasket(props))}
         >
           افزودن به سبد خرید
         </button>
