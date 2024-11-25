@@ -1,50 +1,46 @@
-# React + TypeScript + Vite
+# Tarkhine (TypeScript Version)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This repository is a newer version of the [Tarkhineh project](https://github.com/hhznmrnayeri/Tarkhine), developed with Typescript and yarn. The additional packages that were added to the version are:
 
-Currently, two official plugins are available:
+- redux (toolkit)
+- react-hook-form
+- yup
+- react-multi-date-picker
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+I implemented all the features of the project using the above packages.
 
-## Expanding the ESLint configuration
+## To run the project:
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
-
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+1-start the server
 
 ```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+yarn server
 ```
+
+2-start dev mode
+
+```js
+yarn dev
+```
+
+you can see its screenshots below:
+
+![1](https://github.com/user-attachments/assets/ea2fae37-a6db-4b7c-ae8d-12d317aa9054)
+
+![2](https://github.com/user-attachments/assets/91c1273d-b0c7-4f89-803f-84e187b048ac)
+
+![3](https://github.com/user-attachments/assets/bc6c3950-c677-4b00-88ae-dcfc63961ebd)
+
+![4](https://github.com/user-attachments/assets/c0ea4e76-ebe8-45d5-bab7-41af600f8f6d)
+
+![5](https://github.com/user-attachments/assets/62e5c20b-73bd-4a65-9916-a1ce17567936)
+
+![6](https://github.com/user-attachments/assets/ad4b64b7-3b52-4905-96b8-1936208fb6c8)
+
+![7](https://github.com/user-attachments/assets/18ba4aa3-a843-4316-ad0d-367ebc38f95f)
+
+![8](https://github.com/user-attachments/assets/13b164b8-e6d1-458a-a4c3-a3422c27e491)
+
+![9](https://github.com/user-attachments/assets/06897a68-fa14-4f2b-bcdf-655ea8a00dae)
+
+![10](https://github.com/user-attachments/assets/64a60704-1dfb-4769-902c-36a7d9be08b3)
