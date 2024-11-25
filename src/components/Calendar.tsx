@@ -1,73 +1,72 @@
-import { useState } from "react";
-import ConvertToPersian from "../hooks/ConvertToPersian";
-import ArrowRightIcon from "../assets/svg/ArrowRightIcon";
+import DatePicker from "react-multi-date-picker";
+import persian from "react-date-object/calendars/persian";
+import persian_fa from "react-date-object/locales/persian_fa";
 import ArrowLeftIcon from "../assets/svg/ArrowLeftIcon";
-type DayGroup = {
-  label: string;
-  values: number[];
+import { useState } from "react";
+import "react-multi-date-picker/styles/colors/green.css";
+import type { Value } from "react-multi-date-picker";
+import { UseFormSetValue } from "react-hook-form";
+type adviceFormValues = {
+  phone: string;
+  date: string;
+  name: string;
 };
-const days: DayGroup[] = [
-  { label: "ش", values: [6, 13, 20, 27, 4] },
-  { label: "ی", values: [5, 12, 19, 26, 3] },
-  { label: "د", values: [4, 11, 18, 25, 2] },
-  { label: "س", values: [3, 10, 17, 24, 1] },
-  { label: "چ", values: [2, 9, 16, 23, 30] },
-  { label: "پ", values: [1, 8, 15, 22, 29] },
-  { label: "ج", values: [30, 7, 14, 21, 28] },
-];
-export default function Calendar() {
-  const [activeDay, setActiveDay] = useState(1);
-  const changeActiveDay = (day: { value: number; disabled: boolean }) => {
-    if (!day.disabled) {
-      setActiveDay(day.value);
+type userFormValues = {
+  firstName: string;
+  lastName: string;
+  userName: string;
+  phone: string;
+  email: string;
+  date: string;
+};
+type CalendarProps = {
+  placeholder: string;
+  adviceSetValue?: UseFormSetValue<adviceFormValues>;
+  userSetValue?: UseFormSetValue<userFormValues>;
+};
+export default function Calendar({
+  placeholder,
+  adviceSetValue,
+  userSetValue,
+}: CalendarProps) {
+  const [value, setDateValue] = useState<Value>();
+  const handleChange = (val: Value) => {
+    setDateValue(val);
+    if (adviceSetValue) {
+      if (val) {
+        adviceSetValue("date", val.toString());
+      } else {
+        adviceSetValue("date", "");
+      }
+    } else if (userSetValue) {
+      if (val) {
+        userSetValue("date", val.toString());
+      } else {
+        userSetValue("date", "");
+      }
     }
   };
   return (
-    <div className="absolute w-full sm:w-72 lg:w-full left-0 top-full bg-white rounded-lg shadow-card p-4 text-sm flex flex-col font-estedadMedium z-30">
-      <div className="flex items-center justify-between">
-        <button
-          className="text-primary rounded-full border border-primary w-6 h-6 flex-center"
-          onClick={(e) => e.preventDefault()}
-        >
-          <ArrowRightIcon size="w-4 h-4" />
-        </button>
-        <span className="font-estedadBold">اردیبهشت ۱۴۰۲</span>
-        <button
-          className="text-primary rounded-full border border-primary w-6 h-6 flex-center"
-          onClick={(e) => e.preventDefault()}
-        >
-          <ArrowLeftIcon size="w-4 h-4" />
-        </button>
-      </div>
-      <div className="flex items-start justify-between text-gray-700 mt-4">
-        {days.map((dayGroup) => (
-          <div
-            key={dayGroup.label}
-            className="flex flex-col items-center gap-2"
-          >
-            <span>{dayGroup.label}</span>
-            {dayGroup.values.map((value, index) => {
-              const isActive = activeDay === value;
-              const isDisabled =
-                (index === 0 && value > 7) || (index === 4 && value < 23);
-              return (
-                <button
-                  key={value}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    changeActiveDay({ value, disabled: isDisabled });
-                  }}
-                  className={`day__calendar ${
-                    isActive && !isDisabled ? "day__active" : ""
-                  } ${isDisabled ? "day__disable" : ""}`}
-                >
-                  {ConvertToPersian({ num: value })}
-                </button>
-              );
-            })}
-          </div>
-        ))}
-      </div>
-    </div>
+    <DatePicker
+      value={value}
+      style={{
+        boxSizing: "border-box",
+        height: "38px",
+        padding: "8px 16px",
+        width: "100%",
+      }}
+      containerStyle={{
+        width: "100%",
+      }}
+      placeholder={placeholder}
+      className="rmdp-prime green"
+      showOtherDays
+      editable={false}
+      onChange={handleChange}
+      arrow={<ArrowLeftIcon />}
+      calendar={persian}
+      locale={persian_fa}
+      calendarPosition="bottom-left"
+    />
   );
 }
